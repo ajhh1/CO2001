@@ -8,40 +8,90 @@ public class Threading {
 	public static String[] files = new String[4];
 	static FileHandle fh = new FileHandle(files, f);
 	static Thread[] threads = new Thread[fh.inFiles.length];
+	static boolean running = true;
+	
 		
 	public static void main(String[]args) throws InterruptedException
 	{
 		Scanner input = new Scanner(System.in);
 		fh.fillInFiles();
 		
-		System.out.println("Would you like to run the application parallel with multiple threads or sequentially with one thread?");
-		System.out.println("Please select P/S: ");
-		String temp = input.next().toUpperCase();		
 		
-		if(temp.equals("P"))
+		while(running)
 		{
-			for(int i = 0; i<threads.length;i++)
+			System.out.println("Would you like to run the application parallel with multiple threads or sequentially with one thread?");
+			System.out.println("Please select P/S: ");
+			String temp = input.next().toUpperCase();		
+			
+			if(temp.equals("P"))
 			{
-				threads[i] = new Thread(fh);
-				threads[i].start();
+				long pStartTime = System.currentTimeMillis();
+				
+				for(int i = 0; i<threads.length;i++)
+				{
+					threads[i] = new Thread(fh);
+					threads[i].start();
+				}
+				
+				for(Thread thread: threads )
+				{
+					thread.join();
+				}
+				long pEndTime = System.currentTimeMillis();
+				
+				for(int i = 0; i<threads.length;i++)
+				{
+					fh.save50(i);
+				}
+				
+				long sEndTime = System.currentTimeMillis();
+				
+				long pTotalTime = pEndTime - pStartTime;
+				long sTotalTime = sEndTime - pEndTime;
+				
+				System.out.println(Arrays.asList(fh.words));
+				System.out.println("The program took "+pTotalTime+" milliseconds to run.");
+				System.out.println("Alternatively, it would have taken "+sTotalTime+" milliseconds to run sequentially.");
+				running = false;
 			}
 			
-			for(Thread thread: threads )
+			else if(temp.equals("S"))
 			{
-				thread.join();
+				long sStartTime = System.currentTimeMillis();
+				
+				for(int i = 0; i<threads.length;i++)
+				{
+					fh.save50(i);
+				}
+				
+				long sEndTime = System.currentTimeMillis();
+				
+				for(int i = 0; i<threads.length;i++)
+				{
+					threads[i] = new Thread(fh);
+					threads[i].start();
+				}
+				
+				for(Thread thread: threads )
+				{
+					thread.join();
+				}
+				long pEndTime = System.currentTimeMillis();
+				
+				long sTotalTime = sEndTime - sStartTime;
+				long pTotalTime = pEndTime - sEndTime;
+				System.out.println(Arrays.asList(fh.words));
+				System.out.println("The program took "+sTotalTime+" milliseconds to run.");
+				System.out.println("Alternatively, it would have taken "+pTotalTime+" milliseconds to run in parallel.");
+				
+				running = false;
 			}
-			System.out.println(Arrays.asList(fh.words));
-		}
-		else if(temp.equals("S"))
-		{
-			System.out.println("wanter.");
-		}
+			
+			else{
+				System.out.println("Incorrect input, command not registered. Please retry: \n");
+			}
 		
-		else{
-			System.out.println("Incorrect input, command not registered.");
 		}
-		
-		
 		
 	}
 

@@ -21,11 +21,6 @@ public class FileHandle implements Runnable{
 		file = f;
 	}
 	
-	public FileHandle()
-	{
-		
-	}
-
 	public void fillInFiles()
 	{
 		for(int x =1; x<=inFiles.length;x++)
@@ -39,6 +34,7 @@ public class FileHandle implements Runnable{
 
 		Random rand = new Random();
 		
+		file = 0;
 		String word;
 		ArrayList<String> fileWords = new ArrayList<String>();
 		ArrayList<String> fiftyWords = new ArrayList<String>();
@@ -60,6 +56,40 @@ public class FileHandle implements Runnable{
 			words[file] = fiftyWords;
 			file++;
 			//System.out.println(fiftyWords);
+		}
+		
+		catch(Exception e){
+			System.out.println("Error");
+		}
+		
+		
+	}
+	
+	public void save50(int x) {
+
+		Random rand = new Random();
+		
+		file = 0;
+		String word;
+		ArrayList<String> fileWords = new ArrayList<String>();
+		ArrayList<String> fiftyWords = new ArrayList<String>();
+		Path path = FileSystems.getDefault().getPath(inFiles[x]);
+					
+		try(BufferedReader rd = Files.newBufferedReader(path))
+		{
+			while((word = rd.readLine() ) != null)
+			{
+				fileWords.add(word);
+			}
+			
+				for (int i=0; i<50; i++)
+				{
+					int temp = rand.nextInt(fileWords.size());
+					fiftyWords.add(fileWords.get(temp));
+				}
+				
+			words[file] = fiftyWords;
+			file++;
 		}
 		
 		catch(Exception e){
