@@ -1,37 +1,47 @@
-import java.io.BufferedReader;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Random;
+import java.util.Scanner;
 
 public class Threading {
 	
-	private static int len = fh.words.length;
-	
-	static String[] inFiles = new String[4];
-	Thread[] threads = new Thread[len];
-	
-	public static void fillInFiles()
-	{
-		for(int x =1; x<=inFiles.length;x++)
-		{
-			inFiles[x-1] = "file" + x + ".txt";
-		}
-	}
-
-	
-	public static void main(String[]args)
-	{
-		fillInFiles();
-		System.out.println(Arrays.asList(inFiles));
+	public static int f;
+	public String file;
+	public static String[] files = new String[4];
+	static FileHandle fh = new FileHandle(files, f);
+	static Thread[] threads = new Thread[fh.inFiles.length];
 		
-		for(int i = 0; i<inFiles.length;i++)
+	public static void main(String[]args) throws InterruptedException
+	{
+		Scanner input = new Scanner(System.in);
+		fh.fillInFiles();
+		
+		System.out.println("Would you like to run the application parallel with multiple threads or sequentially with one thread?");
+		System.out.println("Please select P/S: ");
+		String temp = input.next().toUpperCase();		
+		
+		if(temp.equals("P"))
 		{
-			FileHandle fh = new FileHandle();
-			Thread threads = new Thread(fh);
+			for(int i = 0; i<threads.length;i++)
+			{
+				threads[i] = new Thread(fh);
+				threads[i].start();
+			}
+			
+			for(Thread thread: threads )
+			{
+				thread.join();
+			}
+			System.out.println(Arrays.asList(fh.words));
 		}
+		else if(temp.equals("S"))
+		{
+			System.out.println("wanter.");
+		}
+		
+		else{
+			System.out.println("Incorrect input, command not registered.");
+		}
+		
+		
 		
 	}
 
