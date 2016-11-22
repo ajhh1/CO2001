@@ -106,7 +106,6 @@ public class Threading {
 
 }*/
 
-import java.util.Arrays;
 import java.util.Scanner;
 
 public class Threading {
@@ -188,7 +187,6 @@ public class Threading {
 				
 				long sTotalTime = sEndTime - sStartTime;
 				long pTotalTime = pEndTime - sEndTime;
-				System.out.println(Arrays.asList(fh.words));
 				System.out.println("The program took "+sTotalTime+" milliseconds to run.");
 				System.out.println("Alternatively, it would have taken "+pTotalTime+" milliseconds to run in parallel.");
 				
