@@ -1,6 +1,5 @@
 
 
-import java.awt.Checkbox;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -10,8 +9,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
-import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Font;
@@ -24,7 +23,7 @@ public class GUI extends Application implements EventHandler<ActionEvent>{
 	//ToggleGroup group = new ToggleGroup();
 
 	private Label label;
-	private Button a,b,c;
+	//private Button a,b,c;
 	private FlowPane box;
 	
 	
@@ -33,7 +32,7 @@ public class GUI extends Application implements EventHandler<ActionEvent>{
 		Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
 		System.out.println(primaryScreenBounds);
 		
-		label = new Label("Hello world!");
+		label = new Label("Hangman");
 		label.setFont(new Font(20));
 		label.setAlignment(Pos.TOP_CENTER);
 		
@@ -54,33 +53,21 @@ public class GUI extends Application implements EventHandler<ActionEvent>{
 		
 		//box = new StackPane();
 		
-		//ToggleGroup group = new ToggleGroup();
-		a = new Button("Parallel");
-		//button1.setToggleGroup(group);
-		//button1.setSelected(true);
+		ToggleGroup group = new ToggleGroup();
+		RadioButton a = new RadioButton("Parallel");
+		a.setToggleGroup(group);
+		a.setSelected(true);
 		
-		b= new Button("Sequential");
-		/*button2.setToggleGroup(group);*/
+		RadioButton b = new RadioButton("Sequential");
+		b.setToggleGroup(group);
 		
-		a.setOnAction(this);
-		b.setOnAction(this);
+		Button c = new Button("Submit");
+		c.setOnAction(this);
 		
-		
-		/*a.setPrefSize(100, 40);
-		b.setPrefSize(100, 40);
-		c.setPrefSize(100, 40);
-		
-		a.setMinSize(100, 40);
-		b.setMinSize(100, 40);
-		c.setMinSize(100, 40);*/
-		
-		box = new FlowPane();
+		box = new FlowPane(a,b,c);
 		box.setAlignment(Pos.CENTER);
-		box.getChildren().addAll(a, b);
 		
 		
-				
-		box.getChildren().add(0, label);
 		
 		Scene scene = new Scene(box);
 		
@@ -115,3 +102,7 @@ public class GUI extends Application implements EventHandler<ActionEvent>{
 		
 	}
 }
+
+
+
+//
