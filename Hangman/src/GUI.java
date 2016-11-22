@@ -92,7 +92,7 @@ public class GUI extends Application implements EventHandler<ActionEvent>{
 		
 		Button pressedButton = (Button)event.getSource();
 		
-		if(pressedButton.getText().contentEquals("Parallel")){
+		if(pressedButton.getText().contentEquals("Submit")){
 			System.out.println("Parallel was selected");
 		}
 		if(pressedButton.getText().equals("Sequential")){
