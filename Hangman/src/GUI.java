@@ -104,12 +104,21 @@ public class GUI extends Application implements EventHandler<ActionEvent>{
 	public void handle(ActionEvent event) {
 		
 		Button pressedButton = (Button)event.getSource();
+		Threading t = new Threading();
 		
 		if(pressedButton.getText().contentEquals("Parallel")){
-			System.out.println("Parallel was selected");
+			try {
+				t.ParallelRun();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
 		if(pressedButton.getText().equals("Sequential")){
-			System.out.println("Sequential was pressed");
+			try {
+				t.SequentialRun();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 			
 		}
 		
