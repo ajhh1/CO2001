@@ -26,6 +26,7 @@ public class GUI extends Application implements EventHandler<ActionEvent>{
 	private Label label;
 	private Button a,b,c;
 	private FlowPane box;
+	private Label g;
 	
 	
 	@Override
