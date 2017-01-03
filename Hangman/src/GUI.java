@@ -3,7 +3,6 @@
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -14,8 +13,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.VBox;
-import javafx.stage.Screen;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 
@@ -23,20 +21,29 @@ public class GUI extends Application{
 
 	private String wordToGuess = "";
 	private Threading t = new Threading();
-	public boolean parallel = false;
-	private Label yourWord = new Label("Your word: ");
-	private Label wordLength = new Label();
+	public boolean parallel1 = false;
+	private Label wordLength = new Label("");
 	private String lettersGuessed = "";
 	private Stage stage;
-	private boolean guess;
 	private int numberOfIncorrectGuesses = 0;
 	public Image image;
+	public StringBuilder changer = new StringBuilder("");
+	public boolean guess = false;
+	
+	public void setNewGame(){
+		wordToGuess = "";
+		t = new Threading();
+		parallel1 = false;
+		wordLength = new Label("");
+		lettersGuessed = "";
+		numberOfIncorrectGuesses = 0;
+		changer = new StringBuilder("");
+		guess = false;
+	}
 	
 
 	@Override
 	public void start(Stage stage) throws Exception {
-		Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
-		System.out.println(primaryScreenBounds);
 		
 		this.stage = stage;
 		Scene scene = openingScreen();
@@ -78,23 +85,24 @@ public class GUI extends Application{
 	}
 	
 	public void setWordLength(){
-		for(char l: wordToGuess.toCharArray()){
-			wordLength.getText().concat("_ ");
+		
+		for(int x =0;x<wordToGuess.length();x++){
+			changer.append("_ ");
 		}
+		wordLength.setUserData(changer);
 	}
 	
 	private Scene openingScreen() {
 		GridPane root = new GridPane();
 		FlowPane buttons = new FlowPane();
-		
+		root.getStylesheets().add("file:style.css");
 		root.setPrefHeight(200);
 		
 		Button parallel = new Button("Parallel");
 		Button sequential = new Button("Sequential");
 		Label opening = new Label("Alastair's Hangman Game!");
 		Label writing = new Label();
-		writing.setPrefWidth(400);
-		writing.setPrefHeight(190);
+		writing.setPrefHeight(200);
 		writing.setText("Please select below how you would like the files to be read: ");
 		
 		
@@ -105,6 +113,7 @@ public class GUI extends Application{
 			public void handle(ActionEvent a){
 				try {
 					t.ParallelRun();
+					parallel1 = true;
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
@@ -136,12 +145,12 @@ public class GUI extends Application{
 
 	private Scene selectDifficulty() {
 		GridPane root = new GridPane();
-		
-		root.setPrefWidth(400);
+		root.getStylesheets().add("file:style.css");
+		root.setPrefWidth(550);
+		root.setPrefHeight(250);
 		
 		Label difficulty = new Label("Difficulty Selection:");
-		Label select = new Label("Please select a difficulty: ");
-		/*final TextField userField = new TextField();*/
+		new Label("Please select a difficulty: ");
 
 		ToggleGroup group = new ToggleGroup();
 		RadioButton easy = new RadioButton("Easy");
@@ -166,11 +175,12 @@ public class GUI extends Application{
 			public void handle(ActionEvent a){
 				String diff = group.getSelectedToggle().getUserData().toString();
 				System.out.println(diff);
-				wordToGuess = t.fh.returnTheWord(Integer.parseInt(diff), false);
+				wordToGuess = t.fh.returnTheWord(Integer.parseInt(diff), parallel1);
 				System.out.println("Difficulty selected: " + diff);
 				System.out.println("Word: " + wordToGuess);
 				setWordLength();
 				stage.setScene(gamePlay());
+				
 			}
 		});
 		
@@ -183,67 +193,127 @@ public class GUI extends Application{
 		root.setConstraints(confirm,3,7);
 		
 		root.getChildren().addAll(difficulty,easy,medium,hard,master,/*userField,*/confirm);
+		
 		return new Scene(root);
 	}
 	
 	private Scene gamePlay(){
-		
 		GridPane root = new GridPane();
+		root.getStylesheets().add("file:style.css");
 		CharSequence ch = "_ ";
-		root.setPrefWidth(1000);
-		root.setPrefHeight(1000);
+		root.setPrefWidth(500);
+		root.setPrefHeight(700);
 		TextField tField1 = new TextField();
-	    VBox vbox1 = new VBox(50);
-	    setWordLength();
-	    vbox1.getChildren().addAll(wordLength, tField1);
+		guess = false;
+		Button b = new Button("Play again?");
+		
+		b.setOnAction(e -> { 
+				setNewGame();
+				stage.setScene(openingScreen());
+ 		  });
+		
+		wordLength.setText(changer.toString());
+	    GridPane gp1 = new GridPane();
 	    tField1.setOnKeyReleased(e -> {
-	        String g = tField1.getText().toLowerCase();
+	    	guess = false;
+	    	String isTheWordDifferent = wordLength.getUserData().toString();
+	    	String g = tField1.getText().toLowerCase();
 	        tField1.setText("");
 	        ImageView man1 = new ImageView();
 	        lettersGuessed += g;
-	        if(wordLength.getText().contains(ch)){
-	        	wordLength.setText(fillingWord());
+	        wordLength.setText(fillingWord());
+	        wordLength.setUserData(fillingWord());
+	        
+	        if(!wordLength.getUserData().toString().equals(isTheWordDifferent))
+	        {
+	        	guess = true;
 	        }
 	        
-	        if(!guess)
-	        	System.out.println("guess");
+	        if(!guess){
 	        	numberOfIncorrectGuesses++;
 	        	loadImage();
+	        	
+	        	
 	        	man1.setImage(image);
-	        	root.setConstraints(man1, 2,2);
+	        	root.setConstraints(man1, 1,3);
 	    	    root.getChildren().add(man1);
-	        	
-	        	
+	        }
+	        
+	    	  if(!wordLength.getText().contains(ch)){
+		        	stage.setScene(winningScreen());
+		        }
+		        
+	    	  if(numberOfIncorrectGuesses==9)
+	        	{
+	        		wordLength.setText("The word was " +wordToGuess);
+	        		tField1.setVisible(false);
+	        		gp1.setConstraints(b, 1,2);
+	        		gp1.getChildren().add(b);
+	        	}
+		       
 	       
 	    });
-	   
-	    		root.setConstraints(vbox1,1,1);
-	    		root.getChildren().add(vbox1);
+	    		gp1.setConstraints(wordLength,1,1);
+	    		gp1.setConstraints(tField1,1,2);
+	    		gp1.getChildren().addAll(wordLength,tField1);
+	    		root.setConstraints(gp1,1,1);
+	    		root.getChildren().add(gp1);
 	    return new Scene(root);
 		}
 
-	  public String fillingWord() {
-        String returnWord = "";
-        guess = false;
-      //  setWordLength();
-        for (char l: wordToGuess.toCharArray()) {
-        	
-            if (lettersGuessed.contains(Character.toString(l))) 
-            {
-                returnWord += l + " ";
-                guess = true;
-            } 
-            else {
-                returnWord += "_ ";
-            }
-        }
-               
-        return returnWord;
-    }
 
+	  public String fillingWord() {
+	        String rValue = "";
+	        for (char l: wordToGuess.toCharArray()) {
+	            if (lettersGuessed.contains(Character.toString(l))) {
+	                rValue += l + "";
+	            } else {
+	                rValue += "_ ";
+	            }
+	        }
+	        return rValue;
+	    }
+	  
+	  public Scene winningScreen(){
+		  GridPane root = new GridPane();
+		  root.getStylesheets().add("file:style.css");
+		  ImageView win = new ImageView();
+		  image = new Image("file:win.png");
+		  Button b = new Button();
+		  b.setText("Play again?");
+		  b.setOnAction(e -> { 
+			  stage.setScene(openingScreen());
+		  });
+		  win.setImage(image);
+		  Text t = new Text();
+		  t.setText(wordLength.getUserData().toString());
+		  root.setConstraints(win,2,2);
+		  root.setConstraints(wordLength,2,1);
+		  root.setConstraints(b,3,1);
+		  root.getChildren().addAll(win,wordLength);
+		  return new Scene(root);
+		  
+	  }
 	public static void main(String[]args)
 	{
 		launch();
 	}
+	 //1,3,5,7,9
+    //0,1,2,3,4
+/*    for (int y =1; y<wordLength.getUserData().toString().length();y=y+2) {
+    	
+        	if (wordToGuess.charAt(y-difference) == letterGuessed.charAt(0))
+        	{
+        		word.setCharAt(y, letterGuessed.charAt(0));
+        		
+        	}
+        		
+        	difference++;
+        	
+        } */
+    
+   // System.out.println(wordLength.getUserData().toString().length());
+    //System.out.println(wordToGuess.toString().length());
+      
 
 }

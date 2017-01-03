@@ -17,6 +17,8 @@ public class FileHandle implements Runnable{
 	
 	public String returnTheWord(int difficulty, boolean parallel)
 	{
+		Random rand = new Random();
+		int selection = rand.nextInt(50);
 		String theWord  = "select";
 		if(parallel)
 		{
@@ -24,7 +26,7 @@ public class FileHandle implements Runnable{
 								case 1: 
 									for(int x =0; x<pWords.size();x++)
 									{
-										if(pWords.get(x).get(0).length() == 5)
+										if(pWords.get(x).get(selection).length() == 5)
 										{
 											theWord = pWords.get(x).get(0);
 										}
@@ -33,7 +35,7 @@ public class FileHandle implements Runnable{
 								case 2: 
 									for(int x =0; x<pWords.size();x++)
 									{
-										if(pWords.get(x).get(0).length() == 6)
+										if(pWords.get(x).get(selection).length() == 6)
 										{
 											theWord = pWords.get(x).get(0);
 										}
@@ -43,7 +45,7 @@ public class FileHandle implements Runnable{
 								case 3: 
 									for(int x =0; x<pWords.size();x++)
 									{
-										if(pWords.get(x).get(0).length() == 7)
+										if(pWords.get(x).get(selection).length() == 7)
 										{
 											theWord = pWords.get(x).get(0);
 										}
@@ -53,7 +55,7 @@ public class FileHandle implements Runnable{
 								case 4: 
 									for(int x =0; x<pWords.size();x++)
 									{
-										if(pWords.get(x).get(0).length() == 8)
+										if(pWords.get(x).get(selection).length() == 8)
 										{
 											theWord = pWords.get(x).get(0);
 										}
@@ -65,16 +67,16 @@ public class FileHandle implements Runnable{
 		else{
 			switch (difficulty){
 								case 1:
-									theWord = sWords.get(0).get(0);
+									theWord = sWords.get(0).get(selection);
 									break;
 								case 2:
-									theWord = sWords.get(1).get(0);
+									theWord = sWords.get(1).get(selection);
 									break;
 								case 3:
-									theWord = sWords.get(2).get(0);
+									theWord = sWords.get(2).get(selection);
 									break;
 								case 4:
-									theWord = sWords.get(3).get(0);
+									theWord = sWords.get(3).get(selection);
 									break;
 									
 			}
@@ -86,7 +88,6 @@ public class FileHandle implements Runnable{
 	
 	public FileHandle()
 	{
-		
 	}
 	
 	@Override
@@ -105,30 +106,28 @@ public class FileHandle implements Runnable{
 			while((word = rd.readLine() ) != null)
 			{
 				fileWords.add(word);
-			}
-			
+			}	
 				for (int i=0; i<50; i++)
 				{
 					int temp = rand.nextInt(fileWords.size());
 					fiftyWords.add(fileWords.get(temp));
-				}
-			
+				}	
 				pWords.add(fiftyWords);
-				//System.out.println(fiftyWords);
-		}
-		
+		}	
 		catch(Exception e){
 			System.out.println("Error");
 		}
 		
-		System.out.println(file);
+		if(file == 3){
+			number.set(-1);
+		}
+		
 	}
 	
 	public void save50(int x) {
 
 		Random rand = new Random();
 		
-		//file = 0;
 		String word;
 		ArrayList<String> fileWords = new ArrayList<String>();
 		ArrayList<String> fiftyWords = new ArrayList<String>();
@@ -140,22 +139,16 @@ public class FileHandle implements Runnable{
 			{
 				fileWords.add(word);
 			}
-			
 				for (int i=0; i<50; i++)
 				{
 					int temp = rand.nextInt(fileWords.size());
 					fiftyWords.add(fileWords.get(temp));
-				}
-				
-			sWords.add(fiftyWords);
-			
-			//System.out.println(fiftyWords);
-		}
-		
+				}	
+			sWords.add(fiftyWords);				
+		}	
 		catch(Exception e){
 			System.out.println("Error");
 		}
-		//file++;
 		
 	}
 
