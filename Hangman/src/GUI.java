@@ -24,6 +24,7 @@ public class GUI extends Application{
 	public boolean parallel1 = false;
 	private Label wordLength = new Label("");
 	private String lettersGuessed = "";
+	private Label lettersUsed = new Label("");
 	private Stage stage;
 	private int numberOfIncorrectGuesses = 0;
 	public Image image;
@@ -39,6 +40,15 @@ public class GUI extends Application{
 		numberOfIncorrectGuesses = 0;
 		changer = new StringBuilder("");
 		guess = false;
+	}
+	
+	public boolean checkGuess(String letter){
+		if(lettersGuessed.contains(letter)){
+			return true;
+		}
+		else{
+			return false;
+		}
 	}
 	
 
@@ -174,10 +184,9 @@ public class GUI extends Application{
 		confirm.setOnAction(new EventHandler<ActionEvent>(){
 			public void handle(ActionEvent a){
 				String diff = group.getSelectedToggle().getUserData().toString();
-				System.out.println(diff);
 				wordToGuess = t.fh.returnTheWord(Integer.parseInt(diff), parallel1);
 				System.out.println("Difficulty selected: " + diff);
-				System.out.println("Word: " + wordToGuess);
+				//System.out.println("Word: " + wordToGuess);
 				setWordLength();
 				stage.setScene(gamePlay());
 				
@@ -221,6 +230,7 @@ public class GUI extends Application{
 	        tField1.setText("");
 	        ImageView man1 = new ImageView();
 	        lettersGuessed += g;
+	        lettersUsed.setText("Letters guessed: " +lettersGuessed);
 	        wordLength.setText(fillingWord());
 	        wordLength.setUserData(fillingWord());
 	        
@@ -256,8 +266,9 @@ public class GUI extends Application{
 	    		gp1.setConstraints(wordLength,1,1);
 	    		gp1.setConstraints(tField1,1,2);
 	    		gp1.getChildren().addAll(wordLength,tField1);
+	    		root.setConstraints(lettersUsed, 1,4);
 	    		root.setConstraints(gp1,1,1);
-	    		root.getChildren().add(gp1);
+	    		root.getChildren().addAll(gp1,lettersUsed);
 	    return new Scene(root);
 		}
 
