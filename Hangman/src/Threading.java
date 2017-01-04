@@ -1,4 +1,5 @@
-
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 public class Threading {
 	
@@ -10,7 +11,6 @@ public class Threading {
 	static boolean running = true;
 	public int count =0;
 	
-		
 	public void SequentialRun() throws InterruptedException
 	{
 			long sStartTime = System.currentTimeMillis();
@@ -30,6 +30,11 @@ public class Threading {
 				threads[count].join();
 			}
 			
+			try {
+				fh.save("thewords.txt");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		long pEndTime = System.currentTimeMillis();
 		
 		long sTotalTime = sEndTime - sStartTime;
@@ -76,6 +81,12 @@ public class Threading {
 			
 			long pTotalTime = pEndTime - pStartTime;
 			long sTotalTime = sEndTime - pEndTime;
+			
+			try {
+				fh.save("thewords.txt");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 			
 			//System.out.println(Arrays.asList(fh.words));
 			System.out.println("The program took "+pTotalTime+" milliseconds to run.");

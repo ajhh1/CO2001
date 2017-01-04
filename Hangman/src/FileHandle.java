@@ -1,5 +1,10 @@
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -10,7 +15,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class FileHandle implements Runnable{ 
 	//static List<String>[] words = new ArrayList[4];
 	public static AtomicInteger number = new AtomicInteger(-1);
-	String[] inFiles = {"file1.txt","file2.txt","file3.txt","file4.txt"};
+	String[] inFiles =	{"file1.txt","file2.txt","file3.txt","file4.txt"};
 	
 	public ArrayList<ArrayList<String>> sWords = new ArrayList<ArrayList<String>>();
 	public ArrayList<ArrayList<String>> pWords = new ArrayList<ArrayList<String>>();
@@ -90,6 +95,16 @@ public class FileHandle implements Runnable{
 	{
 	}
 	
+	public void save(String fileName) throws FileNotFoundException {
+	    PrintWriter pw = new PrintWriter(new FileOutputStream(fileName));
+	    for (ArrayList<String> sWords: sWords)
+	        pw.println(sWords.toString());
+	    for (ArrayList<String> pWords: pWords)
+		    pw.println(pWords.toString());
+	    	
+	    pw.close();
+	}
+	
 	@Override
 	public void run() {
 
@@ -99,9 +114,10 @@ public class FileHandle implements Runnable{
 		
 		ArrayList<String> fileWords = new ArrayList<String>();
 		ArrayList<String> fiftyWords = new ArrayList<String>();
-		Path path = FileSystems.getDefault().getPath(inFiles[file]);
+		InputStream x = getClass().getResourceAsStream(inFiles[file]);
+		InputStreamReader P = new InputStreamReader(x);
 					
-		try(BufferedReader rd = Files.newBufferedReader(path))
+		try(BufferedReader rd = new BufferedReader(P))
 		{
 			while((word = rd.readLine() ) != null)
 			{
@@ -131,9 +147,10 @@ public class FileHandle implements Runnable{
 		String word;
 		ArrayList<String> fileWords = new ArrayList<String>();
 		ArrayList<String> fiftyWords = new ArrayList<String>();
-		Path path = FileSystems.getDefault().getPath(inFiles[x]);
-					
-		try(BufferedReader rd = Files.newBufferedReader(path))
+		InputStream q = getClass().getResourceAsStream(inFiles[x]);
+		InputStreamReader P = new InputStreamReader(q);
+		
+		try(BufferedReader rd = new BufferedReader(P))
 		{
 			while((word = rd.readLine() ) != null)
 			{

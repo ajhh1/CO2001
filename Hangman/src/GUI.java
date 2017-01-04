@@ -1,5 +1,7 @@
 
 
+import java.io.InputStream;
+
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -30,12 +32,14 @@ public class GUI extends Application{
 	public Image image;
 	public StringBuilder changer = new StringBuilder("");
 	public boolean guess = false;
+	public String imageName ="";
 	
 	public void setNewGame(){
 		wordToGuess = "";
 		t = new Threading();
 		parallel1 = false;
 		wordLength = new Label("");
+		lettersUsed.setText("");
 		lettersGuessed = "";
 		numberOfIncorrectGuesses = 0;
 		changer = new StringBuilder("");
@@ -52,9 +56,18 @@ public class GUI extends Application{
 	}
 	
 
+	/*public void saveFiles(){
+		for(int p =0; p<t.fh.inFiles.length;p++){
+			InputStream stream = GUI.class.getResourceAsStream(t.fh.toString());
+			t.fh.inFiles[p] = stream;
+		}
+	}
+		*/
+
 	@Override
 	public void start(Stage stage) throws Exception {
-		
+		GUI.class.getResource("style.css").toExternalForm();
+		//saveFiles();
 		this.stage = stage;
 		Scene scene = openingScreen();
 		stage.setScene(scene);
@@ -65,31 +78,31 @@ public class GUI extends Application{
 	public void loadImage(){
 		switch (numberOfIncorrectGuesses){
 			case 1:
-					image = new Image("file:1.png");
+					image = new Image(GUI.class.getResourceAsStream("1.png"));
 					break;
 			case 2:
-					image = new Image("file:2.png");
+					image = new Image(GUI.class.getResourceAsStream("2.png"));
 					break;
 			case 3: 
-					image = new Image("file:3.png");
+					image = new Image(GUI.class.getResourceAsStream("3.png"));
 					break;
 			case 4:
-					image = new Image("file:4.png");
+					image = new Image(GUI.class.getResourceAsStream("4.png"));
 					break;
 			case 5:
-					image = new Image("file:5.png");
+					image = new Image(GUI.class.getResourceAsStream("5.png"));
 					break;
 			case 6:
-					image = new Image("file:6.png");
+					image = new Image(GUI.class.getResourceAsStream("6.png"));
 					break;
 			case 7:
-					image = new Image("file:7.png");
+					image = new Image(GUI.class.getResourceAsStream("7.png"));
 					break;
 			case 8:
-					image = new Image("file:8.png");
+					image = new Image(GUI.class.getResourceAsStream("8.png"));
 					break;
 			case 9:
-					image = new Image("file:9.png");
+					image = new Image(GUI.class.getResourceAsStream("9.png"));
 					break;
 		}
 	}
@@ -105,7 +118,8 @@ public class GUI extends Application{
 	private Scene openingScreen() {
 		GridPane root = new GridPane();
 		FlowPane buttons = new FlowPane();
-		root.getStylesheets().add("file:style.css");
+	//	root.getStylesheets().add("file:style.css");
+		root.getStylesheets().add(GUI.class.getResource("style.css").toExternalForm());
 		root.setPrefHeight(200);
 		
 		Button parallel = new Button("Parallel");
@@ -155,7 +169,8 @@ public class GUI extends Application{
 
 	private Scene selectDifficulty() {
 		GridPane root = new GridPane();
-		root.getStylesheets().add("file:style.css");
+		//root.getStylesheets().add("file:style.css");
+		root.getStylesheets().add(GUI.class.getResource("style.css").toExternalForm());
 		root.setPrefWidth(550);
 		root.setPrefHeight(250);
 		
@@ -208,7 +223,8 @@ public class GUI extends Application{
 	
 	private Scene gamePlay(){
 		GridPane root = new GridPane();
-		root.getStylesheets().add("file:style.css");
+	//	root.getStylesheets().add("file:style.css");
+		root.getStylesheets().add(GUI.class.getResource("style.css").toExternalForm());
 		CharSequence ch = "_ ";
 		root.setPrefWidth(500);
 		root.setPrefHeight(700);
@@ -287,7 +303,8 @@ public class GUI extends Application{
 	  
 	  public Scene winningScreen(){
 		  GridPane root = new GridPane();
-		  root.getStylesheets().add("file:style.css");
+		 // root.getStylesheets().add("file:style.css");
+		  root.getStylesheets().add (GUI.class.getResource("style.css").toExternalForm());
 		  ImageView win = new ImageView();
 		  image = new Image("file:win.png");
 		  Button b = new Button();
